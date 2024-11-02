@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simulator Terminal Linux</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: monospace;
+    }
+    .terminal {
+      width: 80%;
+      height: 400px;
+      border: 1px solid green;
+      overflow-y: scroll;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <p>Selamat datang di simulator terminal Linux!</p>
+    <p>Ketik perintah su untuk menjadi root.</p>
+  </div>
+  <input type="text" id="command" placeholder="Ketik perintah...">
+  <input type="password" id="password" placeholder="Password" style="display: none;">
+  <script>
+    const terminal = document.querySelector('.terminal');
+    const commandInput = document.getElementById('command');
+    const passwordInput = document.getElementById('password');
+    let isRoot = false; // Flag to track root mode
+
+    commandInput.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') {
+        const command = commandInput.value;
+        commandInput.value = '';
+
+        if (command === 'su') {
+          passwordInput.style.display = 'block';
+          commandInput.style.display = 'none';
+        } else if (command === 'exit' && isRoot) {
+          terminal.innerHTML += '<p>Bye :(</p>';
+          commandInput.placeholder = "Ketik perintah..."; // Reset prompt
+          isRoot = false;
+        } else if (command === 'apt update' && isRoot) {
+          // Simulate update process
+          terminal.innerHTML += '<p>Updating package lists...</p>';
+          for (let progress = 1; progress <= 100; progress += 10) {
+            setTimeout(() => {
+              terminal.innerHTML += `<p>Downloading packages... ${progress}% complete</p>`;
+            }, progress * 100); // Simulate delay for each progress update
+          }
+          terminal.innerHTML += '<p>Successfully updated package lists.</p>';
+        } else if (command === 'v') {
+          terminal.innerHTML += '<p>version 0.1</p>'; // Replace with your desired version
+        } else if (command === 'k') {
+          terminal.innerHTML += '<p>Simulator Terminal Linux v1.0</p>';
+        } else if (command === 'whoami') {
+          // Display current user
+          terminal.innerHTML += `<p>${isRoot ? 'root' : 'user'}</p>`;
+        } else if (command === 'own') {
+          // Open YouTube link in a new tab
+          window.open('https://www.youtube.com/', '_blank');
+        } else if (command === 'dnt') {
+          // Open Google link in a new tab
+          window.open('https://www.google.com/', '_blank');
+        } else {
+          // Proses perintah lain (misalnya ls, cd, dll.)
+          if (!isRoot) {
+            terminal.innerHTML += `<p>${command}: Perintah tidak ditemukan.</p>`;
+          } else {
+            // Implement logic for other root-specific commands here
+            terminal.innerHTML += `<p>Perintah '${command}' sedang dalam pengembangan untuk mode root.</p>`;
+          }
+        }
+      }
+    });
+
+    passwordInput.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') {
+        const password = passwordInput.value;
+        passwordInput.value = '';
+        passwordInput.style.display = 'none';
+        commandInput.style.display = 'block';
+
+        // Validasi password (ganti dengan logika autentikasi yang sebenarnya)
+        if (password === 'rahasia') {
+          terminal.innerHTML += '<p>Anda sekarang login sebagai root.</p>';
+          commandInput.placeholder = "#"; // Root prompt
+          isRoot = true;
+        } else {
+          terminal.innerHTML += '<p>Password salah.</p>';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
